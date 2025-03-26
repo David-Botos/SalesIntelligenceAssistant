@@ -18,6 +18,7 @@
   "homepage": "https://github.com/David-Botos/BearHugDeepResearch#readme",
   "description": "",
   "dependencies": {
+    "@boundaryml/baml": "^0.81.1",
     "@pinecone-database/pinecone": "^5.1.1",
     "dotenv": "^16.4.7"
   },
