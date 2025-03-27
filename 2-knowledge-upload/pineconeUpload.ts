@@ -1,4 +1,4 @@
-import distillMarkdown from "../2-markdown-distillation/distill-markdown";
+import distillMarkdown from "../1-markdown-distillation/distill-markdown";
 import dotenv from "dotenv";
 import { Pinecone } from "@pinecone-database/pinecone";
 import path from "path";

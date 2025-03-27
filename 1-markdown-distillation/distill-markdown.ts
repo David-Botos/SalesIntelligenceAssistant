@@ -3,7 +3,6 @@ import * as path from "path";
 import { b, DocumentStructure, MarkdownSection } from "../baml_client";
 
 import dotenv from "dotenv";
-import { error } from "console";
 dotenv.config();
 
 function processSection(section: MarkdownSection): string {
@@ -73,24 +72,6 @@ async function saveDocumentAsMarkdown(
   return outputPath;
 }
 
-async function convertAndSaveDocument(documentJson: string): Promise<string> {
-  try {
-    if (process.env.DISTILLED_DIRECTORY) {
-      const outputDir = process.env.DISTILLED_DIRECTORY;
-      const document: DocumentStructure = JSON.parse(documentJson);
-      const filePath = await saveDocumentAsMarkdown(document, outputDir);
-      console.log(`Markdown file created at: ${filePath}`);
-      return filePath;
-    } else {
-      console.error("Error loading DISTILLED_DIRECTORY env var", error);
-      throw error;
-    }
-  } catch (error) {
-    console.error("Error creating markdown file:", error);
-    throw error;
-  }
-}
-
 function readTextFile(filePath: string): string {
   try {
     const resolvedPath = path.resolve(filePath);
@@ -108,11 +89,21 @@ export default async function distillMarkdown(
   inputTXTFilePath: string
 ): Promise<string> {
   const websiteContents = readTextFile(inputTXTFilePath);
+
+  console.log("✅ Success reading the text file: ", websiteContents);
   const markdownJSON = await b.ExtractDocumentStructure(websiteContents);
 
-  const markdownContent = convertDocumentToMarkdown(markdownJSON);
+  console.log("✅ BAML Extraction Success: ", markdownJSON);
 
-  const markdownFilePath = await convertAndSaveDocument(markdownContent);
+  const outputDir = process.env.DISTILLED_DIRECTORY || "";
+
+  if (outputDir === "") {
+    throw new Error("cant find the distilled_directory env variable");
+  }
+
+  const markdownFilePath = saveDocumentAsMarkdown(markdownJSON, outputDir);
+
+  console.log("✅ Markdown file created.  View it here: ", markdownFilePath);
 
   return markdownFilePath;
 }

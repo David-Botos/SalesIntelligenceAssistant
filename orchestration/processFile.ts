@@ -1,5 +1,5 @@
-import distillMarkdown from "../2-markdown-distillation/distill-markdown";
-import { uploadMarkdownToPinecone } from "../3-knowledge-upload/pineconeUpload";
+import distillMarkdown from "../1-markdown-distillation/distill-markdown";
+import { uploadMarkdownToPinecone } from "../2-knowledge-upload/pineconeUpload";
 
 // Get the file path from the command line arguments
 const filePath = process.argv[2];

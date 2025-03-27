@@ -56,34 +56,25 @@ curl -s "https://r.jina.ai/$URL" \
     -H "Authorization: Bearer $JINA_TOKEN" \
     > "$OUTPUT_FILE"
 
-# Check if the operation was successful
+# extract structured markdown and generate a document
 if [ $? -eq 0 ] && [ -s "$OUTPUT_FILE" ]; then
     echo "Success! Content extracted and saved to $OUTPUT_FILE"
     echo "File size: $(du -h "$OUTPUT_FILE" | cut -f1)"
     
-    # extract structured markdown and generate a document
-    if [ $? -eq 0 ] && [ -s "$OUTPUT_FILE" ]; then
-        echo "Success! Content extracted and saved to $OUTPUT_FILE"
-        echo "File size: $(du -h "$OUTPUT_FILE" | cut -f1)"
-        
-        # Call the processFile.ts script with the text file path
-        echo "Processing document and uploading to Pinecone Assistant..."
-        npx ts-node ./processFile.ts "$OUTPUT_FILE"
-        
-        # Get the exit code from the TypeScript execution
-        TS_EXIT_CODE=$?
-        
-        if [ $TS_EXIT_CODE -eq 0 ]; then
-            echo "Document processing completed successfully"
-            exit 0
-        else
-            echo "Error: Failed to process document"
-            exit $TS_EXIT_CODE
+    # Call the processFile.ts script with the text file path
+    echo "Processing document and uploading to Pinecone Assistant..."
+    npx ts-node ./orchestration/processFile.ts "$OUTPUT_FILE"
+    
+    # Get the exit code from the TypeScript execution
+    TS_EXIT_CODE=$?
+    
+    if [ $TS_EXIT_CODE -eq 0 ]; then
+        echo "Document processing completed successfully"
+        exit 0
+    else
+        echo "Error: Failed to process document"
+        exit $TS_EXIT_CODE
     fi
-else
-    # Error handling remains the same
-fi
-
 else
     echo "Error: Failed to extract content or file is empty."
     # Remove empty file if it exists

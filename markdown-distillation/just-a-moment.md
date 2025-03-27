@@ -1,0 +1,6 @@
+# Just a moment...
+
+Source: [https://aitinkerers.org/p/faq](https://aitinkerers.org/p/faq)
+
+# Just a moment...
+
